@@ -39,7 +39,7 @@ class TGDF_Sponsor_REST_Controller extends WP_REST_Posts_Controller
         }
 
         if ( ! empty( $schema['properties']['link'] ) ) {
-            $data['link'] = get_permalink( $post->ID );
+            $data['link'] = get_post_meta( $post->ID, 'sponsor-link', true );
         }
 
         if ( ! empty( $schema['properties']['title'] ) ) {
@@ -57,8 +57,7 @@ class TGDF_Sponsor_REST_Controller extends WP_REST_Posts_Controller
             /** This filter is documented in wp-includes/post-template.php */
             $excerpt = apply_filters( 'the_excerpt', apply_filters( 'get_the_excerpt', $post->post_excerpt, $post ) );
             $data['excerpt'] = array(
-                'raw'       => $post->post_excerpt,
-                'rendered'  => post_password_required( $post ) ? '' : $excerpt,
+                'raw'       => sanitize_text_field($post->post_excerpt),
                 'protected' => (bool) $post->post_password,
             );
         }
@@ -110,6 +109,8 @@ class TGDF_Sponsor_REST_Controller extends WP_REST_Posts_Controller
                 ),
             ),
         );
+
+        $schema['properties']['excerpt']['properties']['raw']['context'] = array( 'view', 'edit' );
 
         return $schema;
     }

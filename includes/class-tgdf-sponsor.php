@@ -80,6 +80,8 @@ class TGDF_Sponsor
         $admin = new TGDF_Sponsor_Admin();
         add_action( 'init', array( $admin, 'create_post_type' ) );
         add_action( 'after_setup_theme', array( $admin, 'add_image_size' ) );
+        add_action( 'add_meta_boxes', array( $admin, 'add_link_meta_boxes') );
+        add_action( 'save_post', array( $admin, 'save_link_meta' ), 10, 2 );
         add_action( 'image_size_names_choose', array( $admin, 'register_image_size_names') );
 
     }
