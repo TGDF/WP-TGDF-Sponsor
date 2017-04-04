@@ -34,6 +34,25 @@ class TGDF_Sponsor_Admin
     }
 
     /**
+     * Define Sponsor's Level
+     *
+     * @since 1.0.0
+     */
+    public function create_taxonomy() {
+        register_taxonomy(
+            'sponsor_level',
+            'sponsor',
+            array(
+                'label' => __( 'Level' ),
+                'public' => true,
+                'rewrite' => array( 'slug' => 'sponsor_level' ),
+                'hierarchical' => true,
+                'show_in_rest' => true
+            )
+        );
+    }
+
+    /**
      * Add meta boxes
      *
      * @since 1.0.0

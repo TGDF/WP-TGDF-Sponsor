@@ -73,6 +73,17 @@ class TGDF_Sponsor_REST_Controller extends WP_REST_Posts_Controller
             );
         }
 
+        $taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
+
+        foreach ( $taxonomies as $taxonomy ) {
+            $base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
+            if ( ! empty( $schema['properties'][ $base ] ) ) {
+                $terms = get_the_terms( $post, $taxonomy->name );
+                $data[ $base ] = $terms ? array_values( wp_list_pluck( $terms, 'term_id' ) ) : array();
+            }
+        }
+
         $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $data    = $this->add_additional_fields_to_object( $data, $request );
         $data    = $this->filter_response_by_context( $data, $context );
